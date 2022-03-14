@@ -9,31 +9,42 @@ function Login(props) {
   const [phone, setphone] = useState(0);
   const [password, setpassword] = useState("");
   const [sent, setsent] = useState(false);
-  const [error, seterror] = useState(false);
+  const [error1, seterror1] = useState(false);
+  const [error2, seterror2] = useState(false);
   let history = useHistory();
   async function send() {
     try {
       setsent(false);
-      seterror(false);
-      const res = await axios.post(
-        `https://stage-services.truemeds.in/CustomerService/sendOtp?mobileNo=${phone}`,
-        {},
-        {
-          headers: {
-            transactionId: "react_interview",
-          },
-        }
-      );
-      console.log(res);
-      setsent(true);
+      seterror1(false);
+      seterror2(false);
+      if (
+        (phone[0] === "6" ||
+          phone[0] === "7" ||
+          phone[0] === "8" ||
+          phone[0] === "9") &&
+        phone.length === 10
+      ) {
+        const res = await axios.post(
+          `https://stage-services.truemeds.in/CustomerService/sendOtp?mobileNo=${phone}`,
+          {},
+          {
+            headers: {
+              transactionId: "react_interview",
+            },
+          }
+        );
+        console.log(res);
+        setsent(true);
+      } else seterror1(true);
     } catch {
-      seterror(true);
+      seterror1(true);
     }
   }
 
   async function verify() {
     try {
-      seterror(false);
+      seterror2(false);
+      seterror1(false);
       const res = await axios.post(
         `https://stage-services.truemeds.in/CustomerService/verifyOtp?mobileNo=${phone}&otp=${password}&de
         viceKey=abcd&isIos=false&source=react_interview`,
@@ -49,7 +60,7 @@ function Login(props) {
       props.success();
       history.push("/");
     } catch {
-      seterror(true);
+      seterror2(true);
     }
   }
 
@@ -69,6 +80,18 @@ function Login(props) {
       />
       <br />
       <br />
+      {error1 && (
+        <Typography
+          variant="body2"
+          gutterBottom
+          component="div"
+          className="error"
+        >
+          Please Enter correct number
+        </Typography>
+      )}
+      <br />
+      <br />
       {sent && (
         <TextField
           id="outlined-password-input"
@@ -80,7 +103,7 @@ function Login(props) {
       )}
 
       <br />
-      {error && (
+      {error2 && (
         <Typography
           variant="body2"
           gutterBottom
