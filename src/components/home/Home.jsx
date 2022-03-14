@@ -7,7 +7,7 @@ import Articles from "../articles/Articles";
 
 const Home = (props) => {
   console.log(props);
-  const { initialMinute = 0, initialSeconds = 10 } = props;
+  const { initialMinute = 1, initialSeconds = 0 } = props;
   const [minutes, setMinutes] = useState(initialMinute);
   const [seconds, setSeconds] = useState(initialSeconds);
   let history = useHistory();
@@ -36,7 +36,7 @@ const Home = (props) => {
   }, [minutes, seconds]);
 
   const reset = () => {
-    setSeconds(5);
+    setMinutes(1);
   };
 
   const logout = () => {
@@ -44,7 +44,7 @@ const Home = (props) => {
     props.logout();
     history.push("/login");
   };
-  //   if (props.loggedIn) history.push("/login");
+  if (!props.loggedIn) history.push("/login");
   return (
     <div className="container">
       <br />
